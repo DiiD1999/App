@@ -46,8 +46,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
-          local: target/SpringBootTest.jar
-          remote: /home/guest/SpringBootTest.jar 
+          remote: target/SpringBootTest.jar
+          local: /home/guest/SpringBootTest.jar 
+          
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
