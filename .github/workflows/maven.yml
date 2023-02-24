@@ -43,7 +43,7 @@ jobs:
       uses: garygrossgarten/github-action-scp@release
       with:
           local: target/demo-0.0.1-SNAPSHOT.jar
-          remote: /home/guest/demo-0.0.1-SNAPSHOT.jar
+          remote: /home/demo-0.0.1-SNAPSHOT.jar
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
@@ -56,6 +56,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/guest
+            cd /home
             nohup java -jar demo-0.0.1-SNAPSHOT.jar > wechart.log 2>&1 &
 
