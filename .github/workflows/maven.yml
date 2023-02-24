@@ -72,3 +72,5 @@ jobs:
             nohup /usr/local/java/jdk1.8.0_361/bin/java -jar /home/demo-0.0.1-SNAPSHOT.jar > runtime.log 2>&1 &
             pwd
 
+
+
