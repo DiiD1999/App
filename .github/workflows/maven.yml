@@ -56,6 +56,5 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home
-            nohup java -jar demo-0.0.1-SNAPSHOT.jar > wechart.log 2>&1 &
+            cd /home && nohup java -jar demo-0.0.1-SNAPSHOT.jar > wechart.log 2>&1 &
 
