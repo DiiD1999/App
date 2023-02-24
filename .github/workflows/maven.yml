@@ -39,30 +39,28 @@ jobs:
     - name: Build with Maven
       run: mvn clean -DfinalName=SpringBootTest package --file pom.xml
       
-    - name: copy file
+    - name: 将 JAR 包部署到服务器
       uses: garygrossgarten/github-action-scp@release
       with:
+          local: target/SpringBootTest.jar
+          remote: /home/guest/SpringBootTest.jar
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
-          remote: target/SpringBootTest.jar
-          local: /home/guest/SpringBootTest.jar 
-          
+          password: ${{ secrets.PASSWORD }}
+               
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          command_timeout: 20s
-          script: | 
-            cd /home/guest/
-            ps -ef | grep SpringBootTest.jar | grep -v grep | awk '{print $2}' | xargs kill -9 
-            nohup java -jar SpringBootTest.jar > nohup.out &
-            pwd
-            exit
+          script: |
+            cd /home/guest
+            nohup java -jar SpringBootTest.jar > wechart.log 2>&1 &
+
+      
+
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
