@@ -27,7 +27,7 @@ jobs:
         java-version: '8.0.362'
         distribution: 'temurin'
         cache: maven
-          # maven缓存，不加的话每次都会去重新拉取，会影响速度   
+    # maven缓存，不加的话每次都会去重新拉取，会影响速度   
     - name: Dependies Cache
       uses: actions/cache@v2
       with:
@@ -35,19 +35,21 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-
+    # Maven 打包
     - name: Build with Maven
       run: mvn clean package --file pom.xml
-      
-    - name: 将 JAR 包部署到服务器
+    # 传输Jar包
+    - name: Transfer jar packets
       uses: garygrossgarten/github-action-scp@release
       with:
+          # local： Github Action 的服务器文件地址
           local: target/demo-0.0.1-SNAPSHOT.jar
+          # remote 私人的服务器文件地址
           remote: /home/demo-0.0.1-SNAPSHOT.jar
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-               
+    # 部署运行
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -56,5 +58,9 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home && nohup java -jar demo-0.0.1-SNAPSHOT.jar > wechart.log 2>&1 &
+            cd /home 
+            ps -ef | grep  demo-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
+            nohup java -jar demo-0.0.1-SNAPSHOT.jar > nohup.out &
+            # nohup java -jar demo-0.0.1-SNAPSHOT.jar > wechart.log 2>
+            exit
 
