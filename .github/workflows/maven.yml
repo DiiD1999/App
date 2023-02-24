@@ -27,6 +27,15 @@ jobs:
         java-version: '8.0.362'
         distribution: 'temurin'
         cache: maven
+          # maven缓存，不加的话每次都会去重新拉取，会影响速度   
+    - name: Dependies Cache
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
     - name: Build with Maven
       run: mvn clean -DfinalName=SpringBootTest package --file pom.xml
     - name: copy file
@@ -36,9 +45,10 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
-          source: "target/SpringBootTest.jar"
-          rm: true
-          target: "/home/guest"
+#           source: "target/SpringBootTest.jar"
+#           rm: true
+          local: target/SpringBootTest.jar
+          remote: /home/guest/SpringBootTest.jar 
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -48,8 +58,8 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 20s
           script: | 
-            cd /home/guest/target
-            ps -ef | grep SpringBootTest.jar.jar | grep -v grep | awk '{print $2}' | xargs kill -9 
+            cd /home/guest/
+            ps -ef | grep SpringBootTest.jar | grep -v grep | awk '{print $2}' | xargs kill -9 
             nohup java -jar SpringBootTest.jar > nohup.out &
             pwd
             exit
