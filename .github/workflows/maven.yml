@@ -45,8 +45,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
-#           source: "target/SpringBootTest.jar"
-#           rm: true
           local: target/SpringBootTest.jar
           remote: /home/guest/SpringBootTest.jar 
     - name: Deploy
